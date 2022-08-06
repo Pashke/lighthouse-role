@@ -1,41 +1,38 @@
 ---
 # tasks file for lighthouse
-- name: Install lighthouse
-  hosts: lighthouse
-  tasks:
-    - name: Upgrade all packages
-      become: true
-      ansible.builtin.yum:
-        name: '*'
-        state: latest
-    - name: Setup lighthouse
-      become: yes
-      become_flags: -i # Execute config files such as .profile (Ansible uses non-interactive login shells)
-      become_user: centos
-      block:
-        - name: Install nvm
-          ansible.builtin.shell: >
-            curl -o- https://raw.githubusercontent.com/creationix/nvm/v{{ nvm_version }}/install.sh | bash
-          args:
-            executable: /bin/bash
-            chdir: "$HOME"
-            creates: "$HOME/.nvm/nvm.sh"
-        - name: Setup .bash_profile nvm
-          ansible.builtin.lineinfile:
-            path: ~/.bash_profile
-            line: source ~/.nvm/nvm.sh # This will make sure Node is on the user's PATH
-            create: yes
-        - name: Install node
-          ansible.builtin.shell: |
-            . ~/.bash_profile && nvm install {{ node_version }}
-          args:
-            executable: /bin/bash
-            chdir: "$HOME"
-            creates: "$HOME/.nvm/versions/node/{{ node_version }}"
-        - name: Install lighthouse
-          ansible.builtin.shell: |
-            npm install -g lighthouse
-          args:
-            executable: /bin/bash
-            chdir: "$HOME"
-            creates: "$HOME/lighthouse"
+- name: Upgrade all packages
+  become: true
+  ansible.builtin.yum:
+    name: '*'
+    state: latest
+- name: Setup lighthouse
+  become: yes
+  become_flags: -i # Execute config files such as .profile (Ansible uses non-interactive login shells)
+  become_user: centos
+  block:
+    - name: Install nvm
+      ansible.builtin.shell: >
+        curl -o- https://raw.githubusercontent.com/creationix/nvm/v{{ nvm_version }}/install.sh | bash
+      args:
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/.nvm/nvm.sh"
+    - name: Setup .bash_profile nvm
+      ansible.builtin.lineinfile:
+        path: ~/.bash_profile
+        line: source ~/.nvm/nvm.sh # This will make sure Node is on the user's PATH
+        create: yes
+    - name: Install node
+      ansible.builtin.shell: |
+        . ~/.bash_profile && nvm install {{ node_version }}
+      args:
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/.nvm/versions/node/{{ node_version }}"
+    - name: Install lighthouse
+      ansible.builtin.shell: |
+        npm install -g lighthouse
+      args:
+        executable: /bin/bash
+        chdir: "$HOME"
+        creates: "$HOME/lighthouse"
