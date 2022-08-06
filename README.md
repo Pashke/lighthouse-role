@@ -1,7 +1,8 @@
 ansible-lighthouse
 =========
 
-homework for the netology
+homework for the netology.  
+v1.00.0
 
 Role Variables
 --------------
