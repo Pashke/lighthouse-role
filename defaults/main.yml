@@ -1,0 +1,4 @@
+---
+# defaults file for lighthouse
+nvm_version: "0.39.1"
+node_version: "v16.16.0"
